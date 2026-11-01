@@ -1,0 +1,127 @@
+input_id,input_name,eto_type,eto_parent_id,plan_step,subgroup,screened,eto_year,global_market_size,reason
+N0,Chip design,process,,out of scope,chip design,no,2022,$574.1 billion (2022),Chip design is out of scope in the plan
+N6,Logic chip design,design_resource,,out of scope,chip design,no,2022,$255.7 billion (2022),Chip design is out of scope in the plan
+N1,Advanced CPUs,design_resource,N6,out of scope,chip design,no,2019,$56.2 billion (microprocessors) (2019),Chip design is out of scope in the plan
+N2,Discrete GPUs,design_resource,N6,out of scope,chip design,no,2019,$11.9 billion (2019),Chip design is out of scope in the plan
+N3,FPGAs,design_resource,N6,out of scope,chip design,no,2019,$5.7 billion (2019),Chip design is out of scope in the plan
+N4,AI ASICs,design_resource,N6,out of scope,chip design,no,2019,,Chip design is out of scope in the plan
+N5,Memory chip design,design_resource,,out of scope,chip design,no,2022,$129.8 billion (2022),Chip design is out of scope in the plan
+N13,DAO chip design,design_resource,,out of scope,chip design,no,2022,$188.7 billion (2022),Chip design is out of scope in the plan
+N7,EDA and Core IP,process,,out of scope,EDA and core IP,no,2019,,Design software and design IP are out of scope in the plan
+N8,Crystal growing furnaces,tool_resource,,manufacturing equipment,front-end fab tools,yes,2022,$44 million (2022),Tool used in wafer fabrication
+N9,Crystal machining tools,tool_resource,,manufacturing equipment,front-end fab tools,yes,2025,$296 million (2025),Tool used in wafer fabrication
+N10,Wafer bonding and aligning tools,tool_resource,N109,manufacturing equipment,advanced-packaging tools,yes,2025,$665.7 million (2025),Tool used in advanced packaging; counted as equipment (Andrew's decision)
+N11,Wafer handlers,tool_resource,N59,manufacturing equipment,front-end fab tools,yes,2025,$2.9 billion (2025),Tool used in wafer fabrication
+N12,Photomask handlers,tool_resource,N59,manufacturing equipment,front-end fab tools,yes,2025,$131.9 million (2025),Tool used in wafer fabrication
+N16,Ion implantation,process,,,process step,no,,,"Process step, not a traded input; ETO gives no shares"
+N17,Ion implanters,tool_resource,,manufacturing equipment,front-end fab tools,yes,2025,$2.6 billion (2025),Tool used in wafer fabrication
+N19,Lithography tools,tool_resource,,manufacturing equipment,aggregate,no,2025,$32.6 billion (2025),Category that adds up narrower inputs; the narrower inputs are screened instead
+N107,Imprint lithography,tool_resource,N19,manufacturing equipment,front-end fab tools,yes,2025,$40.1 million (2025),Tool used in wafer fabrication
+N20,EUV lithography tools,tool_resource,N19,manufacturing equipment,front-end fab tools,yes,2025,$13 billion (2025),Tool used in wafer fabrication
+N21,ArF dry (DUV) lithography tools,tool_resource,N19,manufacturing equipment,front-end fab tools,yes,2025,$508 million (2025),Tool used in wafer fabrication
+N22,ArF immersion (DUV) lithography tools,tool_resource,N19,manufacturing equipment,front-end fab tools,yes,2025,$11.7 billion (2025),Tool used in wafer fabrication
+N105,KrF (DUV) lithography tools,tool_resource,N19,manufacturing equipment,front-end fab tools,yes,2025,$1.7 billion (2025),Tool used in wafer fabrication
+N106,i-line lithography tools,tool_resource,N19,manufacturing equipment,front-end fab tools,yes,2025,$1.1 billion (2025),Tool used in wafer fabrication
+N25,Photolithography,process,,,process step,no,,,"Process step, not a traded input; ETO gives no shares"
+N26,Wafer,material_resource,,materials,fab materials,yes,2019,$10.9 billion,Material consumed in wafer fabrication
+N28,Maskless lithography tools,tool_resource,N19,manufacturing equipment,aggregate,no,,,Category that adds up narrower inputs; the narrower inputs are screened instead
+N29,Mask exposure systems - e-beam,tool_resource,N28,manufacturing equipment,front-end fab tools,yes,2025,$994 million (2025),Tool used in wafer fabrication
+N30,Mask exposure systems - laser beam,tool_resource,N28,manufacturing equipment,front-end fab tools,yes,2025,$170.2 million (2025),Tool used in wafer fabrication
+N108,Direct write systems,tool_resource,N28,manufacturing equipment,front-end fab tools,yes,2025,$32.7 million (2025),Tool used in wafer fabrication
+N31,Photoresists,material_resource,N126,materials,fab materials,yes,2019,$3.3 billion (all photoresists),Material consumed in wafer fabrication
+N32,Resist processing tools,tool_resource,N19,manufacturing equipment,front-end fab tools,yes,2025,$3.2 billion (2025),Tool used in wafer fabrication
+N33,Photomasks,material_resource,N126,materials,fab materials,yes,2019,$4 billion (all photomasks),Material consumed in wafer fabrication
+N35,Deposition,process,,,process step,no,,,"Process step, not a traded input; ETO gives no shares"
+N36,Deposition tools,tool_resource,,manufacturing equipment,aggregate,no,2025,$26.2 billion (2025),Category that adds up narrower inputs; the narrower inputs are screened instead
+N138,Other deposition tools (non-IC),tool_resource,N36,out of scope,non-IC tools,no,2025,$1.3 billion (2025),Tools for non-IC or discrete devices; not used to make advanced logic chips or HBM (draft judgment)
+N38,Plasma CVD tools,tool_resource,N47,manufacturing equipment,front-end fab tools,yes,2025,$7.5 billion (2025),Tool used in wafer fabrication
+N39,Low-pressure CVD tools,tool_resource,N47,manufacturing equipment,front-end fab tools,yes,2025,$2.2 billion (2025),Tool used in wafer fabrication
+N40,High-temperature CVD tools,tool_resource,N47,manufacturing equipment,front-end fab tools,yes,2025,$1.6 billion (2025),Tool used in wafer fabrication
+N41,Atomic layer deposition tools,tool_resource,N36,manufacturing equipment,front-end fab tools,yes,2025,$4.1 billion (2025),Tool used in wafer fabrication
+N42,Physical vapor deposition tools,tool_resource,N36,manufacturing equipment,front-end fab tools,yes,2025,$4.9 billion (2025),Tool used in wafer fabrication
+N43,Rapid thermal processing tools,tool_resource,N36,manufacturing equipment,front-end fab tools,yes,2025,$1.3 billion (2025),Tool used in wafer fabrication
+N44,Tube-based diffusion and deposition tools,tool_resource,N36,manufacturing equipment,front-end fab tools,yes,2025,$2.1 billion (2025),Tool used in wafer fabrication
+N45,Electrochemical plating tools,tool_resource,N36,manufacturing equipment,front-end fab tools,yes,2025,$852.6 million (2025),Tool used in wafer fabrication
+N104,Plasma modification tools,tool_resource,N36,manufacturing equipment,front-end fab tools,yes,2025,$368.6 million (2025),Tool used in wafer fabrication
+N46,Etch and clean,process,,,process step,no,,,"Process step, not a traded input; ETO gives no shares"
+N55,Etch and clean tools,tool_resource,,manufacturing equipment,aggregate,no,2025,$29.1 billion (2025),Category that adds up narrower inputs; the narrower inputs are screened instead
+N47,Chemical vapor deposition tools,tool_resource,N36,manufacturing equipment,aggregate,no,2025,$11.2 billion (2025),Category that adds up narrower inputs; the narrower inputs are screened instead
+N48,Dry etching and cleaning tools,tool_resource,,manufacturing equipment,aggregate,no,2025,$22.6 billion (2025),Category that adds up narrower inputs; the narrower inputs are screened instead
+N49,Wet etching and cleaning tools,tool_resource,,manufacturing equipment,front-end fab tools,yes,2025,$7.1 billion (2025),Tool used in wafer fabrication
+N103,Dry etch tools,tool_resource,N48,manufacturing equipment,aggregate,no,2025,$21.9 billion (2025),Category that adds up narrower inputs; the narrower inputs are screened instead
+N50,Conductor etching tools,tool_resource,N103,manufacturing equipment,front-end fab tools,yes,2025,$12.2 billion (2025),Tool used in wafer fabrication
+N51,Insulator etching tools,tool_resource,N103,manufacturing equipment,front-end fab tools,yes,2025,$8.7 billion (2025),Tool used in wafer fabrication
+N54,Misc. dry etch tools,tool_resource,N103,manufacturing equipment,front-end fab tools,yes,2025,$420.1 million (2025),Tool used in wafer fabrication
+N52,Ion milling tools,tool_resource,N48,manufacturing equipment,front-end fab tools,yes,2025,$0.4 million (2025),Tool used in wafer fabrication
+N53,Dry stripping tools,tool_resource,N48,manufacturing equipment,front-end fab tools,yes,2025,$314.6 million (2025),Tool used in wafer fabrication
+N102,Dry clean tools,tool_resource,N48,manufacturing equipment,front-end fab tools,yes,2025,$432.6 million (2025),Tool used in wafer fabrication
+N57,Chemical mechanical planarization,process,,,process step,no,,,"Process step, not a traded input; ETO gives no shares"
+N59,Wafer and photomask handlers,tool_resource,,manufacturing equipment,aggregate,no,2025,$3 billion (2025),Category that adds up narrower inputs; the narrower inputs are screened instead
+N60,Process control tools,tool_resource,,manufacturing equipment,aggregate,no,2025,$15.7 billion (2025),Category that adds up narrower inputs; the narrower inputs are screened instead
+N61,Wafer inspection tools,tool_resource,N60,manufacturing equipment,aggregate,no,2019,,Category that adds up narrower inputs; the narrower inputs are screened instead
+N62,Photomask inspection and repair tools,tool_resource,N60,manufacturing equipment,front-end fab tools,yes,2025,$2.2 billion (2025),Tool used in wafer fabrication
+N63,Inspection tools (adv. pkg.),tool_resource,N109,manufacturing equipment,advanced-packaging tools,yes,2025,$1.2 billion (2025),Tool used in advanced packaging; counted as equipment (Andrew's decision)
+N64,Process monitoring tools,tool_resource,N60,manufacturing equipment,front-end fab tools,yes,2025,$49.9 million (2025),Tool used in wafer fabrication
+N65,"Film, stack, and shape metrology tools",tool_resource,N61,manufacturing equipment,front-end fab tools,yes,2025,$2.6 billion (2025),Tool used in wafer fabrication
+N66,Critical dimensions metrology tools,tool_resource,N61,manufacturing equipment,front-end fab tools,yes,2025,$1.2 billion (2025),Tool used in wafer fabrication
+N67,Defect inspection tools,tool_resource,N61,manufacturing equipment,front-end fab tools,yes,2025,$6.7 billion (2025),Tool used in wafer fabrication
+N114,Overlay metrology tools,tool_resource,N61,manufacturing equipment,front-end fab tools,yes,2025,$991.4 million (2025),Tool used in wafer fabrication
+N115,E-beam metrology tools,tool_resource,N61,manufacturing equipment,front-end fab tools,yes,2025,$1.3 billion (2025),Tool used in wafer fabrication
+N116,Defect review stations,tool_resource,N61,manufacturing equipment,front-end fab tools,yes,2025,$729.1 million (2025),Tool used in wafer fabrication
+N69,Assembly and packaging,process,,,process step,no,,,"Process step, not a traded input; ETO gives no shares"
+N70,Assembly inspection tools,tool_resource,N119,manufacturing equipment,assembly and test tools,yes,2025,$347.7 million (2025),"Tool used in assembly, packaging or testing"
+N71,Dicing tools,tool_resource,N119,manufacturing equipment,assembly and test tools,yes,2025,$1.9 billion (2025),"Tool used in assembly, packaging or testing"
+N72,Bonding tools,tool_resource,N119,manufacturing equipment,aggregate,no,2025,$2.5 billion (2025),Category that adds up narrower inputs; the narrower inputs are screened instead
+N73,Die attaching tools,tool_resource,N72,manufacturing equipment,aggregate,no,2025,$1.6 billion (2025),Category that adds up narrower inputs; the narrower inputs are screened instead
+N131,Die attaching tools for IC,tool_resource,N73,manufacturing equipment,assembly and test tools,yes,2025,$1.3 billion (2025),"Tool used in assembly, packaging or testing"
+N132,Die attaching tools for non-IC,tool_resource,N73,out of scope,non-IC tools,no,2025,$293.5 million (2025),Tools for non-IC or discrete devices; not used to make advanced logic chips or HBM (draft judgment)
+N74,Wire bonding tools,tool_resource,N72,manufacturing equipment,aggregate,no,2025,$621.6 million (2025),Category that adds up narrower inputs; the narrower inputs are screened instead
+N133,Manual wire bonders,tool_resource,N74,manufacturing equipment,assembly and test tools,yes,2025,$5 million (2025),"Tool used in assembly, packaging or testing"
+N134,Auto ball bonders for IC,tool_resource,N74,manufacturing equipment,assembly and test tools,yes,2025,$305 million (2025),"Tool used in assembly, packaging or testing"
+N135,Auto ball bonders for non-IC,tool_resource,N74,out of scope,non-IC tools,no,2025,$101.5 million (2025),Tools for non-IC or discrete devices; not used to make advanced logic chips or HBM (draft judgment)
+N136,Automatic wedge bonders,tool_resource,N74,manufacturing equipment,assembly and test tools,yes,2025,$96.6 million (2025),"Tool used in assembly, packaging or testing"
+N137,Wafer level stud bonders,tool_resource,N74,manufacturing equipment,assembly and test tools,yes,2025,$21.6 million (2025),"Tool used in assembly, packaging or testing"
+N75,Other interconnect tools,tool_resource,N72,manufacturing equipment,assembly and test tools,yes,2025,$205.4 million (2025),"Tool used in assembly, packaging or testing"
+N76,Packaging tools,tool_resource,,manufacturing equipment,assembly and test tools,yes,2025,$681.2 million (2025),"Tool used in assembly, packaging or testing"
+N77,Integrated assembly tools,tool_resource,N119,manufacturing equipment,assembly and test tools,yes,2025,$24.7 million (2025),"Tool used in assembly, packaging or testing"
+N78,Testing,process,,,process step,no,,,"Process step, not a traded input; ETO gives no shares"
+N79,Memory test tools,tool_resource,N120,manufacturing equipment,assembly and test tools,yes,2025,$1.8 billion (2025),"Tool used in assembly, packaging or testing"
+N80,SoC test tools,tool_resource,N120,manufacturing equipment,assembly and test tools,yes,2025,$6.9 billion (2025),"Tool used in assembly, packaging or testing"
+N81,Burn-in test tools,tool_resource,N120,manufacturing equipment,assembly and test tools,yes,2025,$359.1 million (2025),"Tool used in assembly, packaging or testing"
+N82,Linear and discrete testing tools,tool_resource,N120,out of scope,non-IC tools,no,2021,$224 million (2021),Tools for non-IC or discrete devices; not used to make advanced logic chips or HBM (draft judgment)
+N83,Handlers and probers,tool_resource,,manufacturing equipment,assembly and test tools,yes,2025,$2.9 billion (2025),"Tool used in assembly, packaging or testing"
+N84,Electronic design automation software,tool_resource,,out of scope,EDA and core IP,no,2019,$6.8 billion (2019),Design software and design IP are out of scope in the plan
+N85,Core intellectual property,material_resource,,out of scope,EDA and core IP,no,2019,$3.9 billion (2019),Design software and design IP are out of scope in the plan
+N86,CMP tools,tool_resource,,manufacturing equipment,front-end fab tools,yes,2025,$3.1 billion (2025),Tool used in wafer fabrication
+N88,Deposition materials,material_resource,N126,materials,fab materials,yes,2019,$1 billion (sputtering targets),Material consumed in wafer fabrication
+N90,CMP materials,material_resource,N126,materials,fab materials,yes,2019,$2.5 billion (slurries and pads),Material consumed in wafer fabrication
+N91,Electronic gases,material_resource,,materials,fab materials,yes,2019,$6 billion,Material consumed in wafer fabrication
+N92,Wet chemicals,material_resource,,materials,fab materials,yes,2019,,Material consumed in wafer fabrication
+N93,Lead frames,material_resource,N100,materials,packaging materials,yes,2019,,Material consumed in packaging
+N94,Bond wires,material_resource,N100,materials,packaging materials,yes,2019,,Material consumed in packaging
+N95,Ceramic packages,material_resource,N100,materials,packaging materials,yes,2019,,Material consumed in packaging
+N96,Substrates,material_resource,N100,materials,packaging materials,yes,2019,,Material consumed in packaging
+N97,Encapsulation resins,material_resource,N100,materials,packaging materials,yes,2019,,Material consumed in packaging
+N98,Die attach materials,material_resource,N100,materials,packaging materials,yes,2019,,Material consumed in packaging
+N99,Finished logic chip,ultimate_output,,,process step,no,,,"Process step, not a traded input; ETO gives no shares"
+N100,Packaging materials,material_resource,,materials,aggregate,no,2019,,Category that adds up narrower inputs; the narrower inputs are screened instead
+N109,Fabrication tools (for advanced packaging),tool_resource,,manufacturing equipment,aggregate,no,2025,$6.2 billion (2025),Category that adds up narrower inputs; the narrower inputs are screened instead
+N101,Dry etching tools (adv. pkg.),tool_resource,N129,manufacturing equipment,advanced-packaging tools,yes,2025,$590.4 million (2025),Tool used in advanced packaging; counted as equipment (Andrew's decision)
+N110,CVD tools (adv. pkg.),tool_resource,N128,manufacturing equipment,advanced-packaging tools,yes,2025,$418.8 million (2025),Tool used in advanced packaging; counted as equipment (Andrew's decision)
+N111,PVD tools (adv. pkg.),tool_resource,N128,manufacturing equipment,advanced-packaging tools,yes,2025,$1.1 billion (2025),Tool used in advanced packaging; counted as equipment (Andrew's decision)
+N112,Spin-on deposition tools (adv. pkg.),tool_resource,N128,manufacturing equipment,advanced-packaging tools,yes,2025,$4.7 million (2025),Tool used in advanced packaging; counted as equipment (Andrew's decision)
+N113,ECP tools (adv. pkg.),tool_resource,N128,manufacturing equipment,advanced-packaging tools,yes,2025,$1.1 billion (2025),Tool used in advanced packaging; counted as equipment (Andrew's decision)
+N122,Resist processing tools (adv. pkg.),tool_resource,N127,manufacturing equipment,advanced-packaging tools,yes,2025,$314.1 million (2025),Tool used in advanced packaging; counted as equipment (Andrew's decision)
+N117,Fabrication materials,process,,,aggregate,no,2022,$40 billion (2022),Category heading with no country rows of its own
+N118,Process control and handling,process,,,process step,no,,,"Process step, not a traded input; ETO gives no shares"
+N119,Assembly tools,tool_resource,,manufacturing equipment,aggregate,no,,,Category that adds up narrower inputs; the narrower inputs are screened instead
+N120,Test tools,tool_resource,,manufacturing equipment,aggregate,no,2025,$9.1 billion (2025),Category that adds up narrower inputs; the narrower inputs are screened instead
+N121,ATP materials,material_resource,,,aggregate,no,2022,$24 billion (2022),Category heading with no country rows of its own
+N123,Mask aligners,tool_resource,N19,manufacturing equipment,front-end fab tools,yes,2025,$177.3 million (2025),Tool used in wafer fabrication
+N124,CMP tools (adv. pkg.),tool_resource,N109,manufacturing equipment,advanced-packaging tools,yes,2025,$437.5 million (2025),Tool used in advanced packaging; counted as equipment (Andrew's decision)
+N125,Single wafer spin & spray systems (adv. pkg.),tool_resource,N129,manufacturing equipment,advanced-packaging tools,yes,2025,$402 million (2025),Tool used in advanced packaging; counted as equipment (Andrew's decision)
+N126,Process-specific fabrication materials,material_resource,,,aggregate,no,,,Category heading with no country rows of its own
+N127,Lithography tools (adv. pkg.),tool_resource,N109,manufacturing equipment,aggregate,no,2025,$347.9 million (2025),Category that adds up narrower inputs; the narrower inputs are screened instead
+N128,Deposition tools (adv. pkg.),tool_resource,N109,manufacturing equipment,aggregate,no,2025,$2.6 billion (2025),Category that adds up narrower inputs; the narrower inputs are screened instead
+N129,Etch and clean tools (adv. pkg.),tool_resource,N109,manufacturing equipment,aggregate,no,2025,$992.4 million (2025),Category that adds up narrower inputs; the narrower inputs are screened instead
+N130,Direct write systems (adv. pkg.),tool_resource,N127,manufacturing equipment,advanced-packaging tools,yes,2025,$33.7 million (2025),Tool used in advanced packaging; counted as equipment (Andrew's decision)

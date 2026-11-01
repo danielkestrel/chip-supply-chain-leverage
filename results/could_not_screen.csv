@@ -1,0 +1,12 @@
+step,subgroup,input,year,countries_listed
+materials,fab materials,CMP materials,2019,"China, France, Germany, Japan, United States"
+materials,fab materials,Deposition materials,2019,"China, Germany, Japan, United States"
+materials,fab materials,Electronic gases,2019,"China, France, Germany, Japan, South Korea, United States"
+materials,fab materials,Photoresists,2019,"China, Japan, South Korea, United States"
+materials,fab materials,Wet chemicals,2019,"China, Germany, Japan, United States"
+materials,packaging materials,Bond wires,2019,"China, Germany, Japan"
+materials,packaging materials,Ceramic packages,2019,"China, Germany, Japan, South Korea, United Kingdom, United States"
+materials,packaging materials,Die attach materials,2019,"China, Germany, Japan"
+materials,packaging materials,Encapsulation resins,2019,"China, Germany, Japan"
+materials,packaging materials,Lead frames,2019,"China, Japan, Singapore"
+materials,packaging materials,Substrates,2019,"China, Japan, South Korea, Taiwan"

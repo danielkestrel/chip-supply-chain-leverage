@@ -1,0 +1,209 @@
+"""Step 1 screen: which countries hold >= X% of world supply of an in-scope chip input.
+
+Screening rules are set out in the README (Step 1).
+Run from the repo root:  python src/screen.py
+"""
+from pathlib import Path
+import re
+
+import pandas as pd
+
+ROOT = Path(__file__).resolve().parent.parent
+RAW = ROOT / "data" / "raw" / "eto_supply_chain_2026-09"
+MAPPING = ROOT / "notes" / "eto_step_mapping.csv"
+SECOND = ROOT / "data" / "processed" / "second_source_figures.csv"
+PROCESSED = ROOT / "data" / "processed"
+RESULTS = ROOT / "results"
+
+THRESHOLDS = [25, 40, 60]
+MAIN_THRESHOLD = 40
+SMALL_MARKET_MUSD = 100  # flag, not filter (Andrew, 2026-10-21)
+BARGAINING_PARTIES = {"United States", "China"}
+NOT_COUNTRIES = {"Various countries", "Europe"}
+
+ETO_CITATION = "ETO Semiconductor Supply Chain Dataset (September 2026 release)"
+ETO_URL = "https://eto.tech/dataset-docs/chipexplorer"
+
+SHARE_COLS = ["step", "input", "country", "share", "year", "source", "source_url",
+              "input_id", "subgroup", "basis", "global_market_size", "small_market", "note"]
+
+
+def market_size_musd(text):
+    """'$13 billion (2025)' -> 13000.0; '$0.4 million' -> 0.4; unparseable -> None."""
+    m = re.search(r"\$([\d.,]+)\s*(billion|million|thousand)", str(text))
+    if not m:
+        return None
+    value = float(m.group(1).replace(",", ""))
+    return value * {"billion": 1000, "million": 1, "thousand": 0.001}[m.group(2)]
+
+
+def small_market_flag(text):
+    size = market_size_musd(text)
+    if size is None:
+        return "unknown"
+    return "yes" if size < SMALL_MARKET_MUSD else "no"
+
+
+def strip_markdown_links(text):
+    return re.sub(r"\[([^\]]*)\]\(([^)]*)\)", r"\1 (\2)", str(text))
+
+
+def eto_shares():
+    """One row per (screened ETO input, country), using ETO's country-level rows as given."""
+    inputs = pd.read_csv(RAW / "inputs.csv")
+    provision = pd.read_csv(RAW / "provision.csv")
+    providers = pd.read_csv(RAW / "providers.csv")
+    mapping = pd.read_csv(MAPPING, dtype=str).fillna("")
+
+    countries = providers[providers.provider_type == "country"]
+    names = dict(zip(countries.provider_id, countries.alias.fillna(countries.provider_name)))
+    names.update({"P5": "Various countries", "P312": "Europe"})
+
+    screened = mapping[mapping.screened == "yes"].set_index("input_id")
+    size = inputs.set_index("input_id").market_share_chart_global_market_size_info
+
+    rows = provision[provision.provider_id.isin(names) & provision.provided_id.isin(screened.index)]
+    out = pd.DataFrame({
+        "step": rows.provided_id.map(screened.plan_step),
+        "input": rows.provided_name,
+        "country": rows.provider_id.map(names),
+        "share": rows.share_provided,
+        "year": rows.year,
+        "source": ETO_CITATION + "; underlying: " + rows.source.map(strip_markdown_links),
+        "source_url": ETO_URL,
+        "input_id": rows.provided_id,
+        "subgroup": rows.provided_id.map(screened.subgroup),
+        "basis": "firm HQ (ultimate parent)",
+        "global_market_size": rows.provided_id.map(size).fillna(""),
+    })
+    out["small_market"] = out.global_market_size.map(small_market_flag)
+    out["note"] = out.share.isna().map({True: "ETO lists this country but gives no share", False: ""})
+    return out
+
+
+def second_source_shares():
+    """Second-source figures (Andrew-approved), summed to country by HQ where given per firm."""
+    fig = pd.read_csv(SECOND, dtype={"share": float, "year": str}).fillna("")
+    keys = ["step", "input", "country", "year", "source", "source_url", "basis", "note"]
+    out = fig.groupby(keys, as_index=False, sort=False).share.sum()
+    out["input_id"] = ""
+    out["subgroup"] = out.step
+    out["global_market_size"] = ""
+    out["small_market"] = "unknown"
+    return out
+
+
+def screen(shares, threshold):
+    passed = shares[(shares.share >= threshold) & ~shares.country.isin(NOT_COUNTRIES)].copy()
+    passed["bargaining_party"] = passed.country.isin(BARGAINING_PARTIES).map({True: "yes", False: "no"})
+    cols = ["step", "subgroup", "input", "country", "share", "year", "basis", "bargaining_party",
+            "small_market", "global_market_size", "source", "source_url"]
+    return passed.sort_values(["step", "subgroup", "input", "share"], ascending=[True, True, True, False])[cols]
+
+
+def could_not_screen(shares):
+    """Screened-scope inputs where no country has a numeric share."""
+    has_number = shares.groupby("input").share.apply(lambda s: s.notna().any())
+    missing = has_number[~has_number].index
+    rows = shares[shares.input.isin(missing)]
+    return (rows.groupby(["step", "subgroup", "input", "year"], as_index=False)
+            .agg(countries_listed=("country", lambda c: ", ".join(sorted(c)))))
+
+
+def country_set_md(screens, cns):
+    def coalition(df):
+        return set(df[df.bargaining_party == "no"].country)
+
+    main = screens[MAIN_THRESHOLD]
+    members = coalition(main)
+    lines = [f"# Country set from the Step 1 screen ({MAIN_THRESHOLD}% threshold)", "",
+             "Generated by `src/screen.py`. Rules: see the README (Step 1). "
+             "US and China are screened but excluded from the set (bargaining parties).", "",
+             "## Countries that pass at 40%", "",
+             "| Country | Inputs passed (share %, year) | All passes are small markets (< $100m)? |",
+             "| --- | --- | --- |"]
+    for c in sorted(members):
+        g = main[main.country == c].sort_values("share", ascending=False)
+        items = "; ".join(f"{r.input} ({r.share:g}%, {r.year}{', small market' if r.small_market == 'yes' else ''})"
+                          for r in g.itertuples())
+        only_small = "yes" if (g.small_market == "yes").all() else "no"
+        lines.append(f"| {c} | {items} | {only_small} |")
+
+    lines += ["", "## Who changes at 25% and 60%", "",
+              "| Threshold | Countries in set | Joins vs 40% | Leaves vs 40% |", "| --- | --- | --- | --- |"]
+    for t in THRESHOLDS:
+        s = coalition(screens[t])
+        lines.append(f"| {t}% | {', '.join(sorted(s)) or '(none)'} | "
+                     f"{', '.join(sorted(s - members)) or '-'} | {', '.join(sorted(members - s)) or '-'} |")
+
+    lines += ["", "### Inputs passed per country at each threshold", "",
+              "Count of inputs passed (in brackets: excluding small markets under $100m).", "",
+              "| Country | 25% | 40% | 60% | Inputs added at 25% | Inputs lost at 60% |",
+              "| --- | --- | --- | --- | --- | --- |"]
+    everyone = sorted(set().union(*(coalition(screens[t]) for t in THRESHOLDS)))
+    for c in everyone:
+        per = {t: screens[t][screens[t].country == c] for t in THRESHOLDS}
+        counts = " | ".join(f"{len(per[t])} ({(per[t].small_market != 'yes').sum()})" for t in THRESHOLDS)
+        added = sorted(set(per[25].input) - set(per[40].input))
+        lost = sorted(set(per[40].input) - set(per[60].input))
+        lines.append(f"| {c} | {counts} | {'; '.join(added) or '-'} | {'; '.join(lost) or '-'} |")
+
+    lines += ["", "## US and China at 40% (context only)", "",
+              "| Country | Number of inputs passed |", "| --- | --- |"]
+    for c in sorted(BARGAINING_PARTIES):
+        lines.append(f"| {c} | {(main.country == c).sum()} |")
+
+    lines += ["", "## In-scope inputs that could not be screened", "",
+              "ETO lists the countries but gives no share numbers. Not filled in (see decisions log).", "",
+              "| Step | Input | Year | Countries listed |", "| --- | --- | --- | --- |"]
+    lines += [f"| {r.step} | {r.input} | {r.year} | {r.countries_listed} |" for r in cns.itertuples()]
+    lines += ["| advanced packaging | Advanced-packaging capacity (e.g. CoWoS) | - | "
+              "No approved source; step kept qualitative |"]
+    return "\n".join(lines) + "\n"
+
+
+def step4_rows_md(kept, dropped):
+    lines = ["", "## Row list for Step 4", "",
+             f"`chokepoint_rows.csv` has {len(kept)} rows. The {len(dropped)} rows for inputs with a world market "
+             f"under ${SMALL_MARKET_MUSD}m were dropped from Step 4 scoring (Andrew's decision, made before any "
+             "scoring). They still count in the country set above, and every country keeps at least one row. "
+             "Dropped rows are in `chokepoint_rows_dropped_small_markets.csv`.", "",
+             "| Row | Country | Input | Share | Year | World market |", "| --- | --- | --- | --- | --- | --- |"]
+    lines += [f"| {r.row_id} | {r.country} | {r.input} | {r.share:g}% | {r.year} | {r.global_market_size} |"
+              for r in dropped.itertuples()]
+    lines += ["", "| Country | Rows kept for Step 4 |", "| --- | --- |"]
+    lines += [f"| {c} | {n} |" for c, n in kept.groupby("country").size().items()]
+    return "\n".join(lines) + "\n"
+
+
+def main():
+    PROCESSED.mkdir(exist_ok=True)
+    RESULTS.mkdir(exist_ok=True)
+    shares = pd.concat([eto_shares(), second_source_shares()], ignore_index=True)[SHARE_COLS]
+    shares = shares.sort_values(["step", "input", "share"], ascending=[True, True, False])
+    shares.to_csv(PROCESSED / "shares.csv", index=False)
+
+    screens = {t: screen(shares, t) for t in THRESHOLDS}
+    for t, df in screens.items():
+        df.to_csv(RESULTS / f"screen_{t}.csv", index=False)
+
+    cns = could_not_screen(shares)
+    cns.to_csv(RESULTS / "could_not_screen.csv", index=False)
+
+    rows = screens[MAIN_THRESHOLD]
+    rows = rows[rows.bargaining_party == "no"].drop(columns="bargaining_party")
+    rows = rows.sort_values(["country", "step", "input"]).reset_index(drop=True)
+    rows.insert(0, "row_id", [f"C{i + 1:02d}" for i in range(len(rows))])  # ids fixed before the drop
+    small = rows.small_market == "yes"  # dropped from Step 4 (Andrew, 2026-10-21, before any scoring)
+    rows[~small].to_csv(RESULTS / "chokepoint_rows.csv", index=False)
+    rows[small].to_csv(RESULTS / "chokepoint_rows_dropped_small_markets.csv", index=False)
+
+    text = country_set_md(screens, cns) + step4_rows_md(rows[~small], rows[small])
+    (RESULTS / "country_set.md").write_text(text, encoding="utf-8")
+    print(f"shares: {len(shares)} rows; chokepoint rows: {(~small).sum()} kept, {small.sum()} small-market dropped")
+    for t in THRESHOLDS:
+        print(t, sorted(set(screens[t][screens[t].bargaining_party == "no"].country)))
+
+
+if __name__ == "__main__":
+    main()

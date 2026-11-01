@@ -1,0 +1,2 @@
+# Keep raw downloads byte-for-byte identical (no line-ending conversion)
+data/raw/** -text
