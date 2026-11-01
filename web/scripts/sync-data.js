@@ -81,8 +81,21 @@ function parseCSV(text) {
   return { header, rows };
 }
 
+// Helper to read from root repo or fallback to already-synced web/data
+function readRepoOrLocal(repoRelPath, localFileName) {
+  const repoPath = path.join(ROOT_REPO, repoRelPath);
+  if (fs.existsSync(repoPath)) {
+    return fs.readFileSync(repoPath, 'utf8');
+  }
+  const localPath = path.join(DATA_DEST, localFileName);
+  if (fs.existsSync(localPath)) {
+    return fs.readFileSync(localPath, 'utf8');
+  }
+  throw new Error(`Data file not found: checked ${repoPath} and ${localPath}`);
+}
+
 // 1. Validate chokepoints_final.csv
-const chokepointsRaw = fs.readFileSync(path.join(ROOT_REPO, 'scoring/chokepoints_final.csv'), 'utf8');
+const chokepointsRaw = readRepoOrLocal('scoring/chokepoints_final.csv', 'chokepoints_final.csv');
 const chokepoints = parseCSV(chokepointsRaw);
 console.log(`Validating scoring/chokepoints_final.csv: ${chokepoints.rows.length} rows`);
 if (chokepoints.rows.length !== 35) {
@@ -101,7 +114,7 @@ for (const col of expectedChokepointCols) {
 }
 
 // 2. Validate cases_final.csv
-const casesRaw = fs.readFileSync(path.join(ROOT_REPO, 'scoring/cases_final.csv'), 'utf8');
+const casesRaw = readRepoOrLocal('scoring/cases_final.csv', 'cases_final.csv');
 const cases = parseCSV(casesRaw);
 console.log(`Validating scoring/cases_final.csv: ${cases.rows.length} rows`);
 if (cases.rows.length !== 5) {
@@ -109,7 +122,7 @@ if (cases.rows.length !== 5) {
 }
 
 // 3. Validate profile_distances.csv
-const profileDistRaw = fs.readFileSync(path.join(ROOT_REPO, 'results/profile_distances.csv'), 'utf8');
+const profileDistRaw = readRepoOrLocal('results/profile_distances.csv', 'profile_distances.csv');
 const profileDist = parseCSV(profileDistRaw);
 console.log(`Validating results/profile_distances.csv: ${profileDist.rows.length} rows`);
 
@@ -157,14 +170,14 @@ console.log('Distance verification passed perfectly!');
 console.log('Closest case counts:', closestCounts);
 
 // 4. Validate asks.csv
-const asksRaw = fs.readFileSync(path.join(ROOT_REPO, 'results/asks.csv'), 'utf8');
+const asksRaw = readRepoOrLocal('results/asks.csv', 'asks.csv');
 const asks = parseCSV(asksRaw);
 console.log(`Validating results/asks.csv: ${asks.rows.length} rows`);
 if (asks.rows.length !== 7) {
   throw new Error(`Expected exactly 7 asks, got ${asks.rows.length}`);
 }
 
-// 5. Copy raw data files to web/data
+// 5. Copy raw data files to web/data (if running in full repository context)
 const filesToSync = [
   { src: 'scoring/chokepoints_final.csv', dest: 'chokepoints_final.csv' },
   { src: 'scoring/cases_final.csv', dest: 'cases_final.csv' },
@@ -189,7 +202,9 @@ const filesToSync = [
 for (const f of filesToSync) {
   const srcPath = path.join(ROOT_REPO, f.src);
   const destPath = path.join(DATA_DEST, f.dest);
-  fs.copyFileSync(srcPath, destPath);
+  if (fs.existsSync(srcPath)) {
+    fs.copyFileSync(srcPath, destPath);
+  }
 }
 
 // 6. Precompute Map Data with D3 Geo Natural Earth and 50m resolution
