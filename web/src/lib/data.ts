@@ -23,37 +23,57 @@ function resolveDataFile(relPath: string): string {
 }
 
 function parseCSV(content: string): { header: string[]; rows: Record<string, string>[] } {
-  const allRows: string[][] = [];
-  let currentRecord = '';
+  const records: string[][] = [];
+  let record: string[] = [];
+  let field = '';
   let inQuotes = false;
 
   for (let i = 0; i < content.length; i++) {
     const char = content[i];
-    if (char === '"') {
-      if (inQuotes && content[i + 1] === '"') {
-        currentRecord += '"';
-        i++;
+
+    if (inQuotes) {
+      if (char === '"') {
+        if (i + 1 < content.length && content[i + 1] === '"') {
+          field += '"';
+          i++; // skip escaped quote
+        } else {
+          inQuotes = false;
+        }
       } else {
-        inQuotes = !inQuotes;
+        field += char;
       }
-    } else if (char === '\n' && !inQuotes) {
-      if (currentRecord.trim()) {
-        allRows.push(parseLine(currentRecord));
-      }
-      currentRecord = '';
-    } else if (char === '\r' && !inQuotes) {
-      // skip carriage return
     } else {
-      currentRecord += char;
+      if (char === '"') {
+        inQuotes = true;
+      } else if (char === ',') {
+        record.push(field.trim());
+        field = '';
+      } else if (char === '\n' || char === '\r') {
+        if (char === '\r' && i + 1 < content.length && content[i + 1] === '\n') {
+          i++;
+        }
+        record.push(field.trim());
+        field = '';
+        if (record.some((f) => f.length > 0)) {
+          records.push(record);
+        }
+        record = [];
+      } else {
+        field += char;
+      }
     }
   }
-  if (currentRecord.trim()) {
-    allRows.push(parseLine(currentRecord));
+
+  if (field.length > 0 || record.length > 0) {
+    record.push(field.trim());
+    if (record.some((f) => f.length > 0)) {
+      records.push(record);
+    }
   }
 
-  if (allRows.length === 0) return { header: [], rows: [] };
-  const header = allRows[0].map((h) => h.trim());
-  const rows = allRows.slice(1).map((r) => {
+  if (records.length === 0) return { header: [], rows: [] };
+  const header = records[0].map((h) => h.trim());
+  const rows = records.slice(1).map((r) => {
     const obj: Record<string, string> = {};
     header.forEach((h, idx) => {
       obj[h] = r[idx] !== undefined ? r[idx].trim() : '';
@@ -62,30 +82,6 @@ function parseCSV(content: string): { header: string[]; rows: Record<string, str
   });
 
   return { header, rows };
-}
-
-function parseLine(line: string): string[] {
-  const values: string[] = [];
-  let current = '';
-  let inQuotes = false;
-  for (let i = 0; i < line.length; i++) {
-    const char = line[i];
-    if (char === '"') {
-      if (inQuotes && line[i + 1] === '"') {
-        current += '"';
-        i++;
-      } else {
-        inQuotes = !inQuotes;
-      }
-    } else if (char === ',' && !inQuotes) {
-      values.push(current);
-      current = '';
-    } else {
-      current += char;
-    }
-  }
-  values.push(current);
-  return values;
 }
 
 const COUNTRY_ISO_MAP: Record<string, string> = {

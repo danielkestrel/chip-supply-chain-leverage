@@ -15,69 +15,65 @@ console.log('Destination web data dir:', DATA_DEST);
 fs.mkdirSync(DATA_DEST, { recursive: true });
 fs.mkdirSync(SRC_DATA_DEST, { recursive: true });
 
-function parseCSV(text) {
-  const allRows = [];
-  let currentRecord = '';
+function parseCSV(content) {
+  const records = [];
+  let record = [];
+  let field = '';
   let inQuotes = false;
-  for (let i = 0; i < text.length; i++) {
-    const char = text[i];
-    if (char === '"') {
-      if (inQuotes && text[i + 1] === '"') {
-        currentRecord += '""';
-        i++;
-      } else {
-        inQuotes = !inQuotes;
-        currentRecord += '"';
-      }
-    } else if (char === '\n' && !inQuotes) {
-      if (currentRecord.trim()) {
-        allRows.push(parseLine(currentRecord));
-      }
-      currentRecord = '';
-    } else if (char === '\r' && !inQuotes) {
-      // skip CR
-    } else {
-      currentRecord += char;
-    }
-  }
-  if (currentRecord.trim()) {
-    allRows.push(parseLine(currentRecord));
-  }
 
-  function parseLine(line) {
-    const values = [];
-    let current = '';
-    let inQuotes = false;
-    for (let i = 0; i < line.length; i++) {
-      const char = line[i];
+  for (let i = 0; i < content.length; i++) {
+    const char = content[i];
+
+    if (inQuotes) {
       if (char === '"') {
-        if (inQuotes && line[i + 1] === '"') {
-          current += '"';
+        if (i + 1 < content.length && content[i + 1] === '"') {
+          field += '"';
           i++;
         } else {
-          inQuotes = !inQuotes;
+          inQuotes = false;
         }
-      } else if (char === ',' && !inQuotes) {
-        values.push(current);
-        current = '';
       } else {
-        current += char;
+        field += char;
+      }
+    } else {
+      if (char === '"') {
+        inQuotes = true;
+      } else if (char === ',') {
+        record.push(field.trim());
+        field = '';
+      } else if (char === '\n' || char === '\r') {
+        if (char === '\r' && i + 1 < content.length && content[i + 1] === '\n') {
+          i++;
+        }
+        record.push(field.trim());
+        field = '';
+        if (record.some((f) => f.length > 0)) {
+          records.push(record);
+        }
+        record = [];
+      } else {
+        field += char;
       }
     }
-    values.push(current);
-    return values;
   }
 
-  const header = allRows[0];
-  const rows = [];
-  for (let r = 1; r < allRows.length; r++) {
-    const row = allRows[r];
+  if (field.length > 0 || record.length > 0) {
+    record.push(field.trim());
+    if (record.some((f) => f.length > 0)) {
+      records.push(record);
+    }
+  }
+
+  if (records.length === 0) return { header: [], rows: [] };
+  const header = records[0].map((h) => h.trim());
+  const rows = records.slice(1).map((r) => {
     const obj = {};
     header.forEach((h, idx) => {
-      obj[h.trim()] = row[idx] !== undefined ? row[idx].trim() : '';
+      obj[h] = r[idx] !== undefined ? r[idx].trim() : '';
     });
-    rows.push(obj);
-  }
+    return obj;
+  });
+
   return { header, rows };
 }
 
