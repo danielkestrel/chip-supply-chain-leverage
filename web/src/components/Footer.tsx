@@ -17,7 +17,7 @@ export default function Footer() {
               </span>
             </div>
             <p className="text-slate-muted text-[11px] leading-relaxed">
-              Research conducted by <strong>Andrew, Ayodele and Gideon</strong> for the Middle Powers hackathon, Track C (Diplomacy). This platform serves as a working research companion; the formal institutional report is in progress.
+              Research conducted by <strong>Andrew, Ayodele and Gideon</strong> for the Middle Powers hackathon, Track C (Diplomacy). This platform serves as the research publication and interactive data companion.
             </p>
             <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-navy-secondary text-blue-grey-light text-[11px] border border-slate-muted/40 font-mono">
               <Award size={13} />
@@ -101,8 +101,8 @@ export default function Footer() {
             Treat repository data as single source of truth. Zero synthetic scores or fabricated citations.
           </p>
           <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-status-warning-text"></span>
-            <span>Status: Research complete · Institutional report in progress</span>
+            <span className="w-2 h-2 rounded-full bg-status-success-text"></span>
+            <span>Status: Research &amp; Report Complete</span>
           </div>
         </div>
       </div>

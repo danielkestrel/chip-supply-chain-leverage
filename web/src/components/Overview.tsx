@@ -29,13 +29,13 @@ export default function Overview({
               Chip-Supply-Chain Leverage for AI Safety
             </p>
             <p className="text-xs text-body-secondary pt-1">
-              By Andrew, Ayodele and Gideon · Research complete; report in progress
+              By Andrew, Ayodele and Gideon · Research and report complete
             </p>
           </div>
 
           <div className="md:text-right shrink-0">
-            <span className="inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-status-warning-bg text-status-warning-text border border-status-warning-border">
-              Research Complete · Report In Progress
+            <span className="inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-status-success-bg text-status-success-text border border-status-success-border">
+              Research &amp; Report Complete
             </span>
           </div>
         </div>
